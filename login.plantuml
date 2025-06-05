@@ -1,0 +1,46 @@
+@startuml login
+skinparam wrapMessageWidth 150
+title Sequence Diagram: Login Flow
+actor User as usr
+
+boundary LoginUI as ui
+control LoginController as ct
+control Authenticator as auth
+entity UserRepository as ur
+database Db as db
+
+usr -> ui: openLoginPage()
+ui-> usr: displayLoginForm()
+usr -> ui : Fill in email & password
+
+ui -> ct : login(username, password)
+ct -> auth : authenticate (email, password)
+auth -> ur : findByEmail(email)
+
+ur -> db: select users table
+db --> ur: raw query result set
+
+alt User exists
+    ur --> auth : User Entity
+    auth -> ct : authentication Result
+    alt Successful login: password matches
+    else User is Admin
+        ct --> ui : redirect To Admin Dashboard
+        ui --> usr : display Admin Dashboard
+    else User is User
+        ct --> ui : redirect To User Dashboard
+        ui --> usr : display User Dashboard
+    else User is Guest
+        ct --> ui : rediret to Commercial Page
+        ui --> usr : display commercial page
+    else Failed login
+        ct --> ui : Show message "Invalid credentials"
+        ui --> usr : display Error "Invalid credentials"
+    end
+else
+    auth --> ct : userNotFound()
+    ct --> ui : showError("User not found")
+    ui --> usr : displayError("User not found")
+end
+
+@enduml

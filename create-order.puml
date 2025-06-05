@@ -1,0 +1,48 @@
+@startuml createOrder
+actor Customer
+
+boundary OrderUI
+control OrderController
+control Validator
+control OrderService
+entity ProductRepository
+entity CouponRepository
+entity OrderRepository
+
+== Customer selects items / enters coupon ==
+Customer -> OrderUI : Select items / enter coupon
+
+== Customer applies coupon ==
+Customer -> OrderUI : Click 'Apply Coupon'
+OrderUI -> OrderController : applyCoupon(couponCode)
+OrderController -> OrderService : findAndValidateCoupon(couponCode)
+OrderService -> CouponRepository : findByCode(couponCode)
+CouponRepository --> OrderService : Coupon or null
+OrderService --> OrderController : coupon data or error
+OrderController --> OrderUI : return coupon info
+OrderUI -> OrderUI : Render price changes (local)
+
+== Customer hits Update ==
+Customer -> OrderUI : Click 'Update'
+OrderUI -> OrderController : updateOrder(orderMetadata)
+OrderController -> Validator : validate(orderMetadata)
+Validator --> OrderController : OK or error
+alt Valid input
+    OrderController -> OrderService : processOrder(orderMetadata)
+    OrderService -> ProductRepository : validate productIds & quantities
+    OrderService -> CouponRepository : validate coupon
+    alt All validations pass
+        OrderService -> OrderRepository : save(order)
+        OrderRepository --> OrderService : success
+        OrderService --> OrderController : OK
+        OrderController --> OrderUI : success
+    else Validation fails
+        OrderService --> OrderController : throw Exception("Invalid product/coupon")
+        OrderController --> OrderUI : error message
+    end
+else Invalid input
+    Validator --> OrderController : throw ValidationError
+    OrderController --> OrderUI : validation error
+end
+
+@enduml

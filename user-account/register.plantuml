@@ -1,0 +1,50 @@
+@startuml register
+actor User as usr
+
+boundary RegisterUI as ui
+control Register_Controller as ct
+entity UserRepository as ur
+database Db as db
+
+usr -> ui: open registration form
+usr  <-- ui: display form
+usr -> ui : Fill in email,password, full name
+
+ui -> ct : register(username, password)
+ct -> ur : find user by email
+ur -> db: select users table
+db --> ur: raw query result set
+ur --> ct: wrap to user object
+
+alt user NOT exists
+    ct -> ur: accept create new User
+    ur -> db: insert new user
+    db --> ur: success
+    ur --> ct: user created successfully
+    ct --> ui: registration successful
+    ui --> usr: display success message
+    ui --> usr: redirect to login page
+else user exists
+    alt user is Verified
+    ct -> ui: user already exists
+    ui-> usr: display error message
+    else user is NOT Verified
+        alt user having OTP session
+        ct -> ui: user already exists, but not verified
+        ui-> usr: display error message
+        else user NOT having OTP session
+            ct -> ur: accept and update User registration info
+            ur -> db: UPDATE users password & full name
+            db --> ur: success
+            ur --> ct: user updated successfully
+            ct --> ui: registration successful
+            ui --> usr: display success message
+            ui --> usr: redirect to login page
+        end
+    end
+end
+
+
+
+
+@enduml

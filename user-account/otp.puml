@@ -1,0 +1,36 @@
+@startuml otp
+'https://plantuml.com/sequence-diagram
+actor User as user
+skinparam wrapMessageWidth 150
+
+boundary RegisterUI as ui
+control Account_Controller as ct
+control Mail_Controller as smtp
+entity UserRepository as ur
+database Database as db
+
+user -> ui: thực hiện một hành động cần xác thực cấp độ 2
+user  <-- ui: hiển thị form
+user -> ui: nhấn nút quên mật khẩu
+user <-- ui: yêu cầu nhập email
+
+ui -> ct: gửi email yêu cầu đặt lại mật khẩu 
+ct -> ur: tìm kiếm người dùng theo email
+ur -> db: select users table
+return raw query result set
+
+ur --> ct: map thành đối tượng người dùng
+alt người dùng không tồn tại
+    ct --> ui: thông báo người dùng không tồn tại
+    ui --> user: hiển thị thông báo lỗi
+else người dùng tồn tại
+    ct -> smtp: yêu cầu gửi mail OTP
+    smtp-> smtp: sinh OTP
+    smtp -> user: mail chứa OTP
+    return kết quả gửi mail
+    smtp --> ct: kết quả gửi mail
+    ct --> ui: thông báo kết quả gửi mail
+    ui --> user: hiển thị kết quả
+end
+
+@enduml

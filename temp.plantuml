@@ -1,0 +1,14 @@
+@startuml asdfasd
+!include common.plantuml
+
+actor User
+participant App
+participant Server
+
+
+
+User -> App: Do Action
+App -> Server: Request Processing
+Server --> App: Response
+App --> User: Result
+@enduml
