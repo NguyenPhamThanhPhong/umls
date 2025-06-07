@@ -1,0 +1,28 @@
+@startuml
+!include ../common.puml
+!include ../style.puml
+actor User as user
+
+
+boundary UI as ui
+control Account_Controller as ct
+entity UserRepository as ur
+database Database as db
+
+note right of user
+    authok
+    otpok
+end note
+
+user -> ui : yc xóa tk
+ui -> ct : yc OTP
+ct -> ur: yc xóa nd
+ur -> db: delete from account
+return kq xóa nd
+
+ur --> ct: tv kq cn
+ct --> ui: tv kq \n & xóa cookie
+ui --> user: tb xóa tk thành công
+ui --> user: route đến trang đăng nhập
+
+@enduml

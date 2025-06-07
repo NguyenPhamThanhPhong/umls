@@ -1,0 +1,28 @@
+@startuml
+
+!include ../../common.puml
+!include ../../style.puml
+
+title đánh tag
+actor User as user
+
+actor User as user
+boundary UI as ui
+control TagController as tc
+entity TagRepository as tr
+database Database as db
+
+note right of user
+    adminok
+end note
+
+user -> ui : chọn xem tất cả các tag
+ui -> tc: yc lấy ds tag
+tc -> tr: lấy ds tag
+tr -> db: select all tags
+db --> tr: trả về ds tag
+tr --> tc: fw ds tag
+tc --> ui: fw ds tag
+ui --> user: hiển thị ds tag
+
+@enduml

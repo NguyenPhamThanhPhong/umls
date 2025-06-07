@@ -1,0 +1,32 @@
+@startuml
+title Nhập sản phẩm vào kho
+
+!include ../../common.puml
+!include ../../style.puml
+
+actor User as user
+boundary UI as ui
+control ProductController as pc
+entity ProductRepository as pr
+database Database as db
+
+note right of user
+    adminok
+end note
+
+user -> ui : yc nhập sp theo lô
+ui --> user : trả về input chọn file
+user -> ui : chọn 1 file csv,\n excel có sẵn
+ui -> user: preview những mã sản phẩm sẽ được nhập
+user -> ui : :xác nhận:
+ui -> pc: fw yc
+
+pc -> pr: yc nhập sp vào kho
+pr -> db: insert into products_items
+db --> pr: trả về các product Keys được chấp nhận
+pr --> pc: fw kq
+pc --> ui: fw kq
+ui --> user: thông báo những mã sản phẩm đã được thêm vào kho
+ui --> user: thông báo những mã sản phẩm không hợp lệ
+
+@enduml

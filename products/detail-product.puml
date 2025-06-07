@@ -1,0 +1,49 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+
+title xem chi tiết sản phẩm
+actor User as user
+
+actor User as user
+boundary UI as ui
+control ProductController as pc
+entity ProductRepository as pr
+entity CategoryRepository as cr
+entity TagRepository as tr
+database Database as db
+
+
+user -> ui : chọn 1 sản phẩm cần xem
+ui -> pc: fw yc
+
+pc -> pr: yc info sp
+pr -> db: select product by id
+
+pc -> pr: yc info các sp liên quan
+pr -> db: select products variants
+
+pc -> cr: yc ds tl
+cr -> db: select categories
+
+pc -> tr: yc ds tag
+tr -> db: select tags
+db --> tr: trả về ds tag
+db --> cr: trả về ds tl
+db --> pr: trả về sp đã chọn
+db --> pr: trả về ds sp liên quan
+
+tr --> pc: fw ds tag
+cr --> pc: fw ds tl
+pr --> pc: fw info sp
+pr --> pc: fw ds sp liên quan
+
+pc -> pc: tổng hợp dữ liệu
+
+pc --> ui: fw kq
+ui --> user: ht chi tiết sp
+ui --> user: ht thể loại, nhãn, các sp liên quan
+
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+
+title Tìm kiếm sản phẩm
+!include ../common.puml
+!include ../style.puml
+
+actor User as user
+boundary UI as ui
+control ProductController as pc
+entity ProductRepository as pr
+database Database as db
+
+user -> ui : yc tìm kiếm sp
+return các trường có thể tìm kiếm
+user-> ui: nhập từ khóa tìm kiếm, nhập các trường khác
+ui -> pc: fw yc
+
+pc -> pr: yc tìm kiếm sp theo trang
+pr -> pr: tối ưu truy vấn
+pr -> db: select products
+db --> pr: trả về kq ds sp
+pr --> pc: fw kq
+pc --> ui: fw kq
+ui --> user: ht ds các sản phẩm ở trang hiện tại
+ui --> user: ht số trang
+
+@enduml

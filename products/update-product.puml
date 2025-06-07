@@ -1,0 +1,37 @@
+@startuml
+!include ../common.puml
+!include ../style.puml
+
+actor User as user
+boundary UI as ui
+control ProductController as pc
+control CloudinaryController as cc
+entity ProductRepository as pr
+database Database as db
+
+note right of user
+    adminok
+end note
+
+user -> ui : yc cn sp chỉ định
+ui --> user : tv form chứa info sp đã chọn
+user -> ui : điền info sp
+ui -> ui: kt các trường info
+ui -> pc : yc tạo sp
+
+alt yêu cầu có ảnh
+    ui -> cc : upload ảnh sp
+    cc -> cc : lưu ảnh vào cloud
+    cc --> pc : trả về url ảnh
+else không có ảnh
+    pc -> pc : cập nhật sp không có ảnh
+end
+
+pc -> pr: yc lưu sp mới
+pr -> db: update products
+db --> pr: trả về sp đã lưu
+pr --> pc: trả về sp đã cập nhật
+pc --> ui: fw kq
+ui --> user: thông báo tạo sp thành công
+
+@enduml

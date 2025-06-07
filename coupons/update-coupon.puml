@@ -1,0 +1,32 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+
+title cn mgg
+
+actor User as user
+boundary UI as ui
+control Coupon_Controller as cpc
+entity Coupon_Repository as cr
+database Database as db
+
+note right of user
+    adminok
+end note
+
+user -> ui : yc cn mgg mới
+ui --> user : tv form cn mgg
+user -> ui : điền info mgg
+ui-> cpc: fw yc cn mgg
+cpc-> cpc: kiểm tra các trường thông tin
+
+cpc -> cr: yc lưu mgg mới
+cr -> db: update coupons \n where id = ?
+db --> cr: trả về mgg đã lưu
+cr --> cpc: trả về mgg đã cn
+cpc --> ui: fw kq
+ui --> user: tb
+
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+
+title Xóa tl
+
+actor User as user
+boundary UI as ui
+control CategoryController as ctc
+entity Category_Repository as cr
+database Database as db
+
+note right of user
+    adminok
+end note
+
+
+user -> ui : yc xóa 1 tl
+ui --> user: yc xác nhận
+user -> ui : xác nhận xóa
+ui -> ctc : fw yc
+ctc -> cr: yc xóa tl
+cr-> db: update products set deleted_at = now()
+return ? rows affected
+
+cr--> ctc: trả về số tl đã xóa
+ctc --> ui: thông báo xóa 1 tl thành công
+ui --> user: hiển thị kết quả xóa
+ui --> user: hiển thị lại danh sách tl
+
+@enduml

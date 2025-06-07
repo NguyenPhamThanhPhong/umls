@@ -1,0 +1,39 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+
+title Tạo sản phẩm mới
+
+actor User as user
+boundary UI as ui
+control ProductController as pc
+control CloudinaryController as cc
+entity ProductRepository as pr
+database Database as db
+
+note right of user
+    adminok
+end note
+
+user -> ui : yc tạo sp mới
+ui --> user : tv form tạo sp
+user -> ui : điền info sp
+ui -> ui: kt các trường info
+ui -> pc : yc tạo sp
+alt yêu cầu có ảnh
+    ui -> cc : upload ảnh sp
+    cc -> cc : lưu ảnh vào cloud
+    cc --> pc : trả về url ảnh
+else không có ảnh
+    pc -> pc : tạo sp không có ảnh
+end
+
+pc -> pr: yc lưu sp mới
+pr -> db: insert into products
+db --> pr: trả về sp đã lưu
+pr --> pc: trả về sp đã tạo
+pc --> ui: fw kq
+ui --> user: thông báo tạo sp thành công
+
+@enduml

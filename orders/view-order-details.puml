@@ -1,0 +1,41 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+
+title xem chi tiết sản phẩm
+actor User as user
+
+actor User as user
+boundary UI as ui
+control Order_Controller as pc
+entity Order_Repository as or
+entity Payment_Repository as pr
+database Database as db
+
+note right of user
+    authok
+end note
+
+user -> ui : chọn 1 dh cần xem
+ui -> pc: fw yc
+
+pc -> or: yc info dh
+or -> db: select orders by id
+oc -> pr: yc info thanh toán
+pr -> db: select payments by order id
+
+db --> pr: trả về thông tin thanh toán
+db --> or: trả về dh đã chọn
+
+pr --> pc: tv ds info thanh toán
+or --> pc: tv info dh
+
+pc -> pc: tổng hợp dữ liệu
+
+pc --> ui: fw kq
+ui --> user: ht chi tiết dh
+ui --> user: ht sản phẩm của dh
+
+
+@enduml

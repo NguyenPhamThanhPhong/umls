@@ -1,0 +1,33 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+
+title tạo Tạo đơn hàng mới
+
+actor User as user
+boundary UI as ui
+control Coupon_Controller as cpc
+entity Coupon_Repository as cr
+
+database Database as db
+
+note right of user
+    userok
+
+end note
+
+user -> ui : nhập mã giảm giá
+ui -> cpc: yc kiểm tra mgg
+cpc -> cr: truy vấn mgg
+cr -> db: select * from coupons where code = mgg
+cr --> cpc: trả về mgg
+cpc -> cpc: kiểm tra mgg có hợp lệ không
+cpc --> ui: trả về mgg & số tiền được giảm
+ui --> user: hiển thị thông tin mgg & số tiền được giảm
+
+
+
+
+
+@enduml

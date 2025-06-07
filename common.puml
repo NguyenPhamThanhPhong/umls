@@ -2,6 +2,11 @@
 !define nd người dùng
 !define mk mật khẩu
 !define sp sản phẩm
+!define tl thể loại
+!define tag nhãn sản phẩm
+!define mgg mã giảm giá
+!define dh đơn hàng
+
 !define yc yêu cầu
 !define dt đối tượng
 !define ht hiển thị
@@ -9,3 +14,19 @@
 !define sys hệ thống
 !define ko không
 !define tt tồn tại
+!define ds danh sách
+!define now hiện tại
+
+!define adminok người dùng đăng nhập thành công với quyền quản trị
+!define userok người dùng đăng nhập thành công với quyền khách hàng
+!define staffok người dùng đăng nhập thành công với quyền nhân viên
+!define authok người dùng đã đăng nhập thành công
+!define otpok người dùng đã xác thực OTP
+!define adminorstaff người dùng đã đăng nhập thành công với quyền quản trị hoặc nhân viên
+
+!define kt kiểm tra
+!define tv trả về
+!define kq kết quả
+!define cn cập nhật
+!define info thông tin
+!define fw chuyển tiếp

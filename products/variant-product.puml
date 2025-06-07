@@ -1,0 +1,30 @@
+@startuml
+title nhóm sản phẩm
+!include ../common.puml
+!include ../style.puml
+
+actor User as user
+boundary UI as ui
+control ProductController as pc
+entity ProductRepository as pr
+database Database as db
+
+note right of user
+    adminok
+end note
+
+user -> ui : yc cn sp chỉ định
+ui --> user : tv form chứa info sp đã chọn
+user -> ui : chọn dropdown các nhóm sp
+ui -> user: ht các nhóm sp
+user -> ui : chọn một nhóm
+ui -> pc: fw yc
+
+pc -> pr: yc cn sp vào nhóm
+pr -> db: update products group_id
+db --> pr: trả về kq cn
+pr --> pc: fw kq
+pc --> ui: fw kq
+ui --> user: thông báo tạo sp thành công
+
+@enduml

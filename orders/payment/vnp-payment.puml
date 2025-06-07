@@ -1,0 +1,50 @@
+@startuml
+
+!include ../../common.puml
+!include ../../style.puml
+
+title tạo Tạo đơn hàng mới
+
+actor User as user
+boundary UI as ui
+control Payment_Controller as pc
+control Order_Controller as oc
+control Vnpay as vnp
+entity Payment_Repository as pr
+database Database as db
+
+note right of user
+    userok
+    người dùng đã tạo một đơn hàng
+end note
+
+
+user-> ui: chọn một đơn hàng cần thanh toán
+ui --> user: hiển thị thông tin đơn hàng & số tiền cần trả
+user -> ui: chọn một phương thức thanh toán
+return ht phương thức thanh toán đã chọn
+user -> ui: yc thanh toán đơn hàng
+ui -> pc: yc thanh toán đơn hàng
+pc -> oc: yc lấy thông tin đơn hàng
+oc -> oc: kiểm tra đơn hàng có hợp lệ không
+oc --> pc: trả về thông tin đơn hàng
+pc -> pc: tạo url thanh toán với lượng tiền cần trả
+pc -> ui: trả về url thanh toán
+ui --> user: điều hướng đến trang thanh toán Vnpay
+user -> vnp: thực hiện thanh toán
+vnp -> vnp: xử lý thanh toán
+vnp --> ui: trả về kết quả thanh toán
+vnp --> pc: trả về kết quả thanh toán
+pc -> pr: lưu kết quả thanh toán
+pr -> db: insert into payments
+db --> pr: trả về kết quả lưu
+pr --> pc: trả về kết quả thanh toán
+pc --> ui: fw kết quả thanh toán
+ui -> ui: xác nhận kết quả thanh toán khớp
+ui --> user: thông báo kết quả thanh toán
+
+
+
+
+
+@enduml

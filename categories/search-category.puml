@@ -1,0 +1,30 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+title Tìm kiếm tl
+
+
+actor User as user
+boundary UI as ui
+control CategoryController as ctc
+entity CategoryRepository as pr
+database Database as db
+
+user -> ui : yc tìm kiếm tl
+return các trường có thể tìm kiếm
+user-> ui: nhập từ khóa tìm kiếm, nhập các trường khác
+ui -> ctc: fw yc
+
+ctc -> pr: yc tìm kiếm tl theo trang
+pr -> pr: tối ưu truy vấn
+pr -> db: select categories
+db --> pr: trả về kq ds tl
+pr --> ctc: fw kq
+ctc --> ui: fw kq
+ui --> user: ht ds các sản phẩm ở trang hiện tại
+ui --> user: ht số trang
+
+
+
+@enduml

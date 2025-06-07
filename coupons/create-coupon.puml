@@ -1,0 +1,30 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+
+title tạo mgg mới
+
+actor User as user
+boundary UI as ui
+control Coupon_Controller as cpc
+entity Coupon_Repository as cr
+database Database as db
+
+note right of user
+    adminok
+end note
+
+user -> ui : yc tạo mgg mới
+ui --> user : tv form tạo mgg
+user -> ui : điền info mgg
+ui-> cpc: fw yc tạo mgg
+cpc-> cpc: kiểm tra các trường thông tin
+
+cpc -> cr: yc lưu mgg mới
+cr -> db: insert into categories
+db --> cr: trả về mgg đã lưu
+cr --> cpc: trả về mgg đã tạo
+cpc --> ui: fw kq
+ui --> user: tb
+@enduml

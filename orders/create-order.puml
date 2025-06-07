@@ -1,0 +1,61 @@
+@startuml
+!include ../common.puml
+!include ../style.puml
+
+title tạo Tạo đơn hàng mới
+
+actor User as user
+boundary UI as ui
+boundary Client_Side_Storage as br
+control Coupon_Controller as cpc
+control Product_Controller as pc
+control Order_Controller as oc
+
+entity Order_Repository as or
+
+database Database as db
+
+note right of user
+    userok
+end note
+
+user -> ui : chọn một sp muốn mua
+ui --> user : ht chi tiết sp
+user -> ui : yc thêm vào giỏ hàng
+ui -> br: đồng bộ giỏ hàng vào local storage
+br -> ui: giỏ hàng đã cập nhật
+ui --> user: tb giỏ hàng đã cập nhật
+ui -> br : lấy metadata từ local storage
+return metadata giỏ hàng
+ui -> pc: yc lấy ds sp trong giỏ hàng
+pc -> pc: truy vấn các sp theo id có trong giỏ hàng
+pc --> ui: trả về ds sp trong giỏ hàng
+user -> ui: yc preview đơn hàng
+ui -> pc: yc lấy info sp trong giỏ hàng
+pc -> pc: truy vấn các sp theo id có trong giỏ hàng
+pc --> ui: trả về ds sp trong giỏ hàng
+ui --> user: ht ds sp trong giỏ hàng
+ui --> user : hiển thị số tiền dự kiến
+user -> ui: yc tạo đơn hàng
+alt người dùng nhập mã giảm giá
+    ui -> cpc: yc kiểm tra mgg
+    cpc -> cpc: kiểm tra mgg có hợp lệ không
+    cpc --> ui: trả về mgg & số tiền được giảm
+    ui --> user: hiển thị thông tin mgg & số tiền được giảm
+else người dùng không nhập mã giảm giá
+    ui --> user: tạo một đơn hàng không có mgg
+end
+
+ui -> oc : fw yc tạo đơn hàng
+oc -> cpc: yc kiểm tra mgg
+return mgg
+oc -> pc: yc kiểm tra số lượng sp
+return số lượng sp
+oc -> or: yc lưu đơn hàng mới
+or -> db: insert into orders
+db --> or: trả về đơn hàng đã lưu
+or --> oc: trả về đơn hàng đã tạo
+oc --> ui: fw kq
+ui --> user: tb đơn hàng đã tạo thành công
+
+@enduml

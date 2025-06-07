@@ -2,6 +2,7 @@
 'https://plantuml.com/sequence-diagram
 actor User as user
 skinparam wrapMessageWidth 150
+!include ../common.puml
 
 boundary RegisterUI as ui
 control Account_Controller as ct
@@ -9,10 +10,11 @@ control Mail_Controller as smtp
 entity UserRepository as ur
 database Database as db
 
-user -> ui: thực hiện một hành động cần xác thực cấp độ 2
-user  <-- ui: hiển thị form
-user -> ui: nhấn nút quên mật khẩu
-user <-- ui: yêu cầu nhập email
+note over user, ui
+    nd thực hiện một
+    thao tác yc
+    xác thực nâng cao
+end note
 
 ui -> ct: gửi email yêu cầu đặt lại mật khẩu 
 ct -> ur: tìm kiếm người dùng theo email

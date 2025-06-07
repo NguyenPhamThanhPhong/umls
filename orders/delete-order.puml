@@ -1,0 +1,29 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+
+title Xóa đơn hàng
+
+actor User as user
+boundary UI as ui
+control Order_Controller as oc
+entity Order_Repository as or
+database Database as db
+
+note right of user
+    authok
+end note
+
+user-> ui: chọn ds đơn hàng muốn xóa
+ui --> user: sys đã chọn các đơn hàng cần xóa
+ui -> oc: fw yc xóa đơn hàng
+oc -> or: yc xóa đơn hàng
+or -> db: delete from orders where id in (ds đơn hàng)
+db --> or: trả về số lượng đơn hàng đã xóa
+or --> oc: trả về kq xóa đơn hàng
+oc --> ui: fw kq
+ui --> user: tb số lượng đơn hàng đã xóa
+
+
+@enduml

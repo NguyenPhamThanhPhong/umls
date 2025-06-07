@@ -1,0 +1,39 @@
+@startuml
+!include ../common.puml
+!include ../style.puml
+
+actor User_Email as user
+control Order_Processor as op
+control Mail_Controller as smtp
+entity Order_Repository as or
+database Database as db
+
+== Luồng xử lý định kỳ mỗi N phút ==
+
+op -> or : truy vấn M đơn hàng (status = PROCESSING)
+or -> db : select from PROCESSING limit M
+db --> or : fw kq
+or --> op :  tv ds đơn hàng
+
+loop với từng đơn hàng
+    op -> smtp : gửi mail xác nhận
+    alt nếu thành công
+        smtp -> user: gửi mail đến khách hàng
+        smtp --> op : kq thành công
+
+        op -> or : cn trạng thái -> SUCCESS
+        or -> db : update order status
+
+    else lần 1 thất bại
+        smtp --> op : lỗi gửi mail
+        op -> or : insert vào bảng PROCESSING\n(info retryAt = now + delay)
+        or -> db : insert PROCESSING
+    else lần 2 thất bại
+        smtp --> op : lỗi lần 2
+        op -> or : insert vào bảng FAIL
+        or -> db : insert FAIL
+    end
+end
+
+
+@enduml

@@ -1,5 +1,31 @@
-@startuml
+@startuml profile
 !include ../common.puml
+!include ../style.puml
+actor User as user
+
+
+boundary RegisterUI as ui
+control Account_Controller as ct
+entity UserRepository as ur
+database Database as db
+
+note right of user
+    userok
+end note
+
+user -> ui : cập nhật thông tin cá nhân
+ui -> ui: kt đúng format
+ui -> ct : chuyển tiếp yêu cầu
+ct -> ur: cập nhật thông tin theo id
+ur -> db: update profile table
+return  thông tin đã cập nhật
+ur --> ct: tv kq cn
+ct --> ui: tv kq
+ui --> user: ht info đã cn
+
+
+
+
 
 
 @enduml

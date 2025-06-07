@@ -1,0 +1,30 @@
+@startuml
+!include ../common.puml
+!include ../style.puml
+
+actor User as user
+boundary UI as ui
+control Order_Controller as oc
+control Order_Processor as op
+control Mail_Controller as smtp
+entity Order_Repository as or
+database Database as db
+
+
+user -> ui : duyệt ds đơn hàng thất bại
+ui -> oc : yêu cầu lấy ds đơn hàng FAIL
+oc -> or : yc truy vấn ds đơn hàng FAIL
+or -> db : select from FAIL
+db --> or : ds đơn hàng
+or --> oc : trả về ds đơn hàng FAIL
+or --> ui : hiển thị ds đơn hàng
+
+user -> ui : chọn đơn hàng cần gửi lại
+ui -> op : yêu cầu xử lý lại đơn hàng
+op -> or : insert lại vào PROCESSING
+or -> db : insert PROCESSING
+db --> or : xác nhận đã insert
+or --> op : trả về kq insert
+op --> ui : thông báo đã gửi lại đơn hàng thành công, chờ xử lý
+ui --> user : ht thông báo
+@enduml

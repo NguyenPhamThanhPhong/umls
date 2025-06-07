@@ -1,0 +1,33 @@
+@startuml
+title Xóa mã sản phẩm
+
+!include ../../common.puml
+!include ../../style.puml
+
+actor User as user
+boundary UI as ui
+control ProductController as pc
+entity ProductRepository as pr
+database Database as db
+
+note right of user
+    adminok
+end note
+
+user -> ui : yc xem ds các mã sản phẩm
+ui --> user : ht ds các mã sản phẩm
+user -> ui : chọn những mã sp muốn xóa
+ui -> user: yc xác nhận xóa
+user -> ui : xác nhận
+ui -> pc: fw yc
+
+pc -> pr: yc xóa mã sp khỏi kho
+pr -> db: delete products_items
+pr -> db: update products quantity
+db --> pr: trả về kq transaction
+pr --> pc: fw kq
+pc --> ui: fw kq
+ui --> user: thông báo xóa thành công
+ui --> user: ht lại số lượng sp trong kho
+
+@enduml

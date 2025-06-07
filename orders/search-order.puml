@@ -1,0 +1,27 @@
+@startuml
+
+title Tìm kiếm đơn hàng
+!include ../common.puml
+!include ../style.puml
+
+actor User as user
+boundary UI as ui
+control Order_Controller as oc
+entity Order_Repository as or
+database Database as db
+
+user -> ui : yc tìm kiếm dh
+return các trường có thể tìm kiếm
+user-> ui: nhập từ khóa tìm kiếm, nhập các trường khác
+ui -> oc: fw yc
+
+oc -> or: yc tìm kiếm dh theo trang
+or -> or: tối ưu truy vấn
+or -> db: select orders
+db --> or: trả về kq ds dh
+or --> oc: fw kq
+oc --> ui: fw kq
+ui --> user: ht ds các sản phẩm ở trang hiện tại
+ui --> user: ht số trang
+
+@enduml

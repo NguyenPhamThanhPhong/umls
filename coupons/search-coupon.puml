@@ -1,0 +1,31 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+
+title tìm kiếm mgg
+
+actor User as user
+boundary UI as ui
+control Coupon_Controller as cpc
+entity Coupon_Repository as cr
+database Database as db
+
+note right of user
+    adminorstaff
+end note
+
+user -> ui : yc xem ds các mgg
+ui --> user : tv form ds mgg
+user -> ui : yc tìm kiếm mgg theo từ khóa & các trường info
+ui-> cpc: fw yc
+
+cpc -> cr: yc tìm kiếm mgg theo trang
+cr -> db: select coupons where name like '%...%' and ?
+db --> cr: trả về ds mgg tại trang
+cr --> cpc: tv kq
+cpc --> ui: fw kq
+ui --> user: ht ds các mgg ở trang hiện tại
+ui --> user: ht số trang
+
+@enduml

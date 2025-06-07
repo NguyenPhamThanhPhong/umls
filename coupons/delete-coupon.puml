@@ -1,0 +1,31 @@
+@startuml
+
+!include ../common.puml
+!include ../style.puml
+
+title Xóa mgg
+
+actor User as user
+boundary UI as ui
+control Coupon_Controller as cpc
+entity Coupon_Repository as cr
+database Database as db
+
+note right of user
+    adminok
+end note
+
+user -> ui : chọn các mgg cần xóa & chọn xóa
+ui --> user : yc xác nhận xóa
+user -> ui : xác nhận xóa
+ui-> cpc: fw yc cn mgg
+
+cpc -> cr: yc xóa các mgg với danh sách id
+cr -> db: delete from coupons where id in (...)
+db --> cr: trả về số lượng mgg đã xóa
+cr --> cpc: trả về mgg đã xóa
+cpc --> ui: fw kq
+ui --> user: tb xóa thành công
+
+
+@enduml
